@@ -1,0 +1,13 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2019-03-16 19:22:10.107 UTC</timestamp>
+  <md5sum>857bc9fcfc8dfef3ad953b37a3b907e5</md5sum>
+  <fileName>Credential id=dockerHubAccount name=giopeto/****** (dockerHubAccount)</fileName>
+  <usages>
+    <entry>
+      <string>d</string>
+      <ranges>1-2</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

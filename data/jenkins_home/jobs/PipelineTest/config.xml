@@ -1,0 +1,43 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.32">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.64">
+    <script>def CONTAINER_NAME=&quot;jenkins-pipeline&quot;
+def CONTAINER_TAG=&quot;latest&quot;
+def DOCKER_HUB_USER=&quot;giopeto&quot;
+def HTTP_PORT=&quot;8090&quot;
+
+node {
+
+    stage(&apos;Initialize&apos;){
+        def dockerHome = tool &apos;myDocker&apos;
+        def mavenHome  = tool &apos;myMaven&apos;
+        env.PATH = &quot;${dockerHome}/bin:${mavenHome}/bin:${env.PATH}&quot;
+    }
+
+    stage(&quot;Docker ps test&quot;){
+        sh &quot;docker ps&quot;
+    }
+
+    stage(&quot;Function call&quot;){
+        test(CONTAINER_NAME, CONTAINER_TAG, DOCKER_HUB_USER, HTTP_PORT)
+    }
+
+}
+
+
+def test(containerName, tag, dockerHubUser, httpPort){
+    echo &quot;containerName ${containerName}&quot;
+    echo &quot;tag ${tag}&quot;
+    echo &quot;dockerHubUser ${dockerHubUser}&quot;
+    echo &quot;httpPort ${httpPort}&quot;
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
