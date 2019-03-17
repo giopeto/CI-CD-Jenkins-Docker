@@ -15,23 +15,23 @@ node {
         checkout scm
     }
 
-    stage('Change working directory...') {
-
-        dir('demo') {
-                sh 'pwd'
-            }
-    }
-    
     stage('Build'){
         dir('demo') {
-                sh 'pwd'
-            }
-        sh "mvn clean install"
+            sh "mvn clean install"
+        }
     }
 
-    
+    stage('Sonar'){
+        try {
+            dir('demo') {
+                sh "mvn sonar:sonar"
+            }
+        } catch(error){
+            echo "The sonar server could not be reached ${error}"
+        }
+     }
 
-     stage("Docker ps test"){
+    stage("Docker ps test"){
         sh "docker ps"
     }
 
@@ -40,12 +40,16 @@ node {
     }
 
     stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+        dir('demo') {
+            imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+        }
     }
 
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+            dir('demo') {
+                pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+            }
         }
     }
 
