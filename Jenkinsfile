@@ -17,11 +17,9 @@ node {
 
     stage('Change working directory...') {
 
-        steps {
-            dir('demo') {
+        dir('demo') {
                 sh 'pwd'
             }
-        }
     }
     
     stage('Build'){
