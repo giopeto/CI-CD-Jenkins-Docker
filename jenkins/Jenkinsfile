@@ -1,7 +1,8 @@
-def CONTAINER_NAME="jenkins-pipeline"
+def CONTAINER_NAME="demo-jenkins-pipeline"
 def CONTAINER_TAG="latest"
 def DOCKER_HUB_USER="giopeto"
 def HTTP_PORT="8090"
+def PROJECT_DIR="demo"
 
 node {
 
@@ -16,14 +17,14 @@ node {
     }
 
     stage('Build'){
-        dir('demo') {
+        dir(PROJECT_DIR) {
             sh "mvn clean install"
         }
     }
 
     stage('Sonar'){
         try {
-            dir('demo') {
+            dir(PROJECT_DIR) {
                 sh "mvn sonar:sonar"
             }
         } catch(error){
@@ -40,14 +41,14 @@ node {
     }
 
     stage('Image Build'){
-        dir('demo') {
+        dir(PROJECT_DIR) {
             imageBuild(CONTAINER_NAME, CONTAINER_TAG)
         }
     }
 
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            dir('demo') {
+            dir(PROJECT_DIR) {
                 pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
             }
         }
